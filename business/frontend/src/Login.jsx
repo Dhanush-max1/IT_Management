@@ -17,7 +17,7 @@ function Login({ onLogin, goToRegister }) {
     setError("");
 
     const trimmedUsername = username.trim();
-d
+
     if (!trimmedUsername || !password) {
       setError("Please enter both username and password.");
       return;
