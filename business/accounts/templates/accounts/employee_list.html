@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Employees
+{% endblock %}
+
+
+
+{% block content %}
+
+<h2>
+Employee List
+</h2>
+
+
+<table class="table table-bordered">
+
+<tr>
+<th>Employee ID</th>
+<th>Name</th>
+<th>Department</th>
+<th>Phone</th>
+</tr>
+
+
+{% for employee in employees %}
+
+<tr>
+
+<td>{{ employee.employee_id }}</td>
+
+<td>{{ employee.user.username }}</td>
+
+<td>{{ employee.department }}</td>
+
+<td>{{ employee.phone }}</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</table>
+
+<a href="{% url 'add_employee' %}" 
+class="btn btn-success mb-3">
+
++ Add Employee
+
+</a>
+
+{% endblock %}

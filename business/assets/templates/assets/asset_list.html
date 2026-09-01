@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Assets
+{% endblock %}
+
+
+{% block content %}
+
+
+<h2>
+Asset List
+</h2>
+
+
+<table class="table table-bordered">
+
+
+<tr>
+
+<th>Name</th>
+<th>Type</th>
+<th>Serial Number</th>
+<th>Status</th>
+
+</tr>
+
+
+{% for asset in assets %}
+
+<tr>
+
+<td>{{ asset.name }}</td>
+
+<td>{{ asset.asset_type }}</td>
+
+<td>{{ asset.serial_number }}</td>
+
+<td>{{ asset.status }}</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</table>
+
+
+{% endblock %}

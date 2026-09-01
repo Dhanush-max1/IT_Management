@@ -1,0 +1,72 @@
+services:
+
+  db:
+    image: postgres:16
+    container_name: it_management_db
+    restart: always
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dhanu
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - it_network
+
+  backend:
+    build:
+      context: ./business
+      dockerfile: Dockerfile
+    image: business-backend:latest
+    container_name: it_management_backend
+    restart: always
+    command: gunicorn business.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      DB_NAME: mydb
+      DB_USER: postgres
+      DB_PASSWORD: dhanu
+      DB_HOST: db
+      DB_PORT: 5432
+    networks:
+      - it_network
+      
+  frontend:
+    build:
+      context: ./business/frontend
+      dockerfile: Dockerfile
+    container_name: it_management_frontend
+    depends_on:
+      backend:
+        condition: service_started
+    image: business-frontend:latest
+    networks:
+      - it_network
+    ports:
+      - "8080:80"
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    container_name: it_management_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - it_network
+
+volumes:
+  postgres_data:
+
+networks:
+  it_network:
+    driver: bridge
